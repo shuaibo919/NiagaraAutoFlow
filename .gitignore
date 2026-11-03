@@ -9,3 +9,4 @@ DerivedData/
 *.swp
 *.user
 *.uprojectuser
+__pycache__/

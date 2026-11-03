@@ -3,6 +3,7 @@
 #include "Misc/App.h"
 #include "Misc/CoreDelegates.h"
 #include "Modules/ModuleManager.h"
+#include "NiagaraAutoFlowToolset_Authoring.h"
 #include "NiagaraAutoFlowToolset_Attributes.h"
 #include "NiagaraAutoFlowToolset_Audit.h"
 #include "NiagaraAutoFlowToolset_Compiled.h"
@@ -38,6 +39,7 @@ void FNiagaraAutoFlowModule::RegisterToolsets()
 
 	const TSubclassOf<UToolsetDefinition> Toolsets[] =
 	{
+		UNiagaraAutoFlowToolset_Authoring::StaticClass(),
 		UNiagaraAutoFlowToolset_Compiled::StaticClass(),
 		UNiagaraAutoFlowToolset_Attributes::StaticClass(),
 		UNiagaraAutoFlowToolset_Topology::StaticClass(),

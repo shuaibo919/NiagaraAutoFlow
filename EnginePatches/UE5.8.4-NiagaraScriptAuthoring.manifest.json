@@ -1,0 +1,10 @@
+{
+  "base_tag": "5.8.4-release",
+  "base_commit": "f45729c0b6f097038e72b52d366a62baeca3275b",
+  "changes": "Three added NiagaraEditor source files, including the typed data-interface and simulation-stage graph bridge; no original engine files modified.",
+  "sha256_lf_utf8": {
+    "Engine/Plugins/FX/Niagara/Source/NiagaraEditor/Public/NiagaraScriptAuthoringUtilities.h": "4c366094ef2b39827562308f95a4b065ec92e2ffb1934e02617ee013da5d3ef2",
+    "Engine/Plugins/FX/Niagara/Source/NiagaraEditor/Private/NiagaraScriptAuthoringUtilities.cpp": "ea5df86a1e870fc4f3860ac469c3462ec53e7a502ba99c9f46de68271079eaed",
+    "Engine/Plugins/FX/Niagara/Source/NiagaraEditor/Private/NiagaraFluidScriptAuthoring.inl": "b10963ec6d151ce47d46eb0b02c6e61e015bdb51e37ef7c79feb8d5c90168adf"
+  }
+}

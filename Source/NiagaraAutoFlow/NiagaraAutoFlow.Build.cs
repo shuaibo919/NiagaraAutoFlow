@@ -27,6 +27,7 @@ public class NiagaraAutoFlow : ModuleRules
 			"Niagara",
 			"NiagaraCore",
 			"NiagaraShader",
+			"NiagaraEditor",
 			"ToolsetRegistry",
 		});
 	}

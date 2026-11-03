@@ -4,7 +4,7 @@ from toolset_registry.agent_skill import agent_skill
 _INSTRUCTIONS = """
 ## What NiagaraAutoFlow adds
 The official Niagara toolsets cover structure (topology, schemas, input values) and editing.
-NiagaraAutoFlow adds the data below them. Use both: official tools to read/edit the stack, AutoFlow tools to understand cost and correctness.
+NiagaraAutoFlow adds custom HLSL module authoring and the data below the stack. Use official tools for stack editing, AutoFlow authoring for managed module assets, and AutoFlow analysis to understand cost and correctness.
 
 - Compiled: RecompileSystem, GetCompiledScripts, GetScriptSource, SearchScriptSource -- translated HLSL (CPU/GPU), VM assembly, op counts, registers, data interfaces, attribute writes per script.
 - Attributes: GetParticleAttributeSet, GetAttributeFlow -- per-particle layout, bytes per particle, which scripts write an attribute and which renderers consume it.
@@ -12,6 +12,14 @@ NiagaraAutoFlow adds the data below them. Use both: official tools to read/edit 
 - Scalability: GetQualityLevels, GetEffectTypeInfo, GetEffectiveScalability -- values that actually apply at a quality level after effect type and overrides merge.
 - Audit: GetAuditRules, AuditSystem, AuditAssets -- rule-based static review with severities; batch audits write a JSON report.
 - Runtime: ListActiveInstances, GetInstanceStats, CaptureParticleData -- live instances, particle counts and memory, sampled attribute values (needs a ticking world: PIE or realtime viewport).
+
+## Custom module authoring
+- Authoring: CreateModuleScriptFromHlsl, GetModuleScriptDefinition, UpdateModuleScriptDefinition, ValidateModuleScript.
+- Create a reusable single-Custom-HLSL module from typed input/output bindings and a multiline function body assigning every output. Module.* inputs are editable controls; Particles/Emitter/System/Engine/User inputs read the parameter map.
+- Creation is unsaved and unvalidated. Add the asset to a compatible enabled stack using official AddModule, then ValidateModuleScript in that system. If the context is busy, wait for its existing compilation to finish and retry. Save only after successful validation. Validate CPU and GPU separately when both are required.
+- Prefer a real ValidationSystem for updates; rollback-on-failure restores the previous definition and recompiles. A missing context means no compile validation, no automatic rollback, and no save. Check bCompileSucceeded, bRolledBack, bRollbackCompileSucceeded and bSaved.
+- Validation waits for GPU shaders too and rejects unrelated systems. A timeout or manual edit during validation prevents automatic save. Timeouts while the compiler is busy require explicit recovery using PreviousDefinition after compilation finishes.
+- This editor requires the EnginePatches bridge. It does not edit arbitrary hand-authored graphs or versioned scripts. Defaults use Niagara pin syntax, not JSON vectors. position is distinct from float3 for LWC.
 
 ## Addressing
 - Emitters by EmitterName exactly as GetSystemSummary reports it.
@@ -48,10 +56,11 @@ def _available_toolsets(names):
 
 @agent_skill
 class NiagaraAutoFlowSkill(unreal.AgentSkill):
-    """Covers analysing Niagara systems below the module stack -- compiled HLSL and VM data, particle attribute sets, simulation stages, effective scalability, rule-based audits and live runtime stats -- and the audit-fix-verify loop with the official Niagara toolsets."""
+    """Covers authoring reusable Custom HLSL module assets and analysing Niagara systems below the module stack -- compiled HLSL and VM data, particle attribute sets, simulation stages, effective scalability, rule-based audits and live runtime stats -- and the audit-fix-verify loop with the official Niagara toolsets."""
 
     instructions = _INSTRUCTIONS
     toolsets = _available_toolsets([
+        "NiagaraAutoFlowToolset_Authoring",
         "NiagaraAutoFlowToolset_Compiled",
         "NiagaraAutoFlowToolset_Attributes",
         "NiagaraAutoFlowToolset_Topology",

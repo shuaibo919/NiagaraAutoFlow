@@ -3,7 +3,7 @@
 	"Version": 1,
 	"VersionName": "1.0",
 	"FriendlyName": "Niagara AutoFlow",
-	"Description": "Extra Niagara toolsets for Unreal MCP: compiled script data, particle attribute sets, simulation stages, effective scalability, rule-based audits and runtime instance stats.",
+	"Description": "Extra Niagara toolsets for Unreal MCP: Custom HLSL module authoring, compiled script data, particle attributes, simulation stages, scalability, audits and runtime stats.",
 	"Category": "FX",
 	"CreatedBy": "",
 	"CreatedByURL": "",
